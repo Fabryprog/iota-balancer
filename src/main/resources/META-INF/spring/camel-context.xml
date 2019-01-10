@@ -45,6 +45,8 @@
     
     <route>
     	<from uri="mqtt://vps-monitor?host=tcp://test.mosquitto.org:1883&amp;reconnectDelay=1000&amp;clientId=proxy-iota-italia&amp;subscribeTopicName=RAW(vps-monitor/+/load/avg1)" />
+		<to uri="log:debug?showAll=true&amp;multiline=true" />
+		
 		<setHeader headerName="_id">
 			<javaScript>
 				var topic = request.getHeader("CamelMQTTSubscribeTopic");
