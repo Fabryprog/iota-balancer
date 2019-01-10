@@ -15,7 +15,7 @@
            <json id="jackson" library="Jackson" />
        </dataFormats>
 
-	<restConfiguration component="jetty" host="0.0.0.0" port="8080" bindingMode="json">
+	<restConfiguration component="jetty" host="0.0.0.0" port="8888" bindingMode="json">
 		  <dataFormatProperty key="json.in.disableFeatures" value="FAIL_ON_UNKNOWN_PROPERTIES,ADJUST_DATES_TO_CONTEXT_TIME_ZONE"/>
 		  <dataFormatProperty key="json.in.enableFeatures" value="FAIL_ON_NUMBERS_FOR_ENUMS,USE_BIG_DECIMAL_FOR_FLOATS"/>
 	</restConfiguration>
