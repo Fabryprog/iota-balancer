@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configures the Camel Context-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <bean id="IOTALoadBalancer" class="org.fabryprog.iota.balancer.IOTALoadBalancer" init-method="init"/>
+
+  <camelContext xmlns="http://camel.apache.org/schema/spring">
+
+	<dataFormats>
+           <json id="jackson" library="Jackson" />
+       </dataFormats>
+
+	<restConfiguration component="jetty" host="0.0.0.0" port="8080" bindingMode="json">
+		  <dataFormatProperty key="json.in.disableFeatures" value="FAIL_ON_UNKNOWN_PROPERTIES,ADJUST_DATES_TO_CONTEXT_TIME_ZONE"/>
+		  <dataFormatProperty key="json.in.enableFeatures" value="FAIL_ON_NUMBERS_FOR_ENUMS,USE_BIG_DECIMAL_FOR_FLOATS"/>
+	</restConfiguration>
+
+	<rest path="/">
+      <post uri="/">
+        <route>
+	        <to uri="seda://routeToIOTANode?waitForTaskToComplete=Always" />
+        </route>
+      </post>
+    </rest>
+
+    <route>
+    	<from uri="seda://routeToIOTANode?concurrentConsumers=10"/>
+		<setHeader headerName="_uri">
+        	<simple>${bean:IOTALoadBalancer?method=route}</simple>
+        </setHeader>
+        
+        <marshal ref="jackson" />
+	        <convertBodyTo type="java.lang.String" />
+        <toD uri="https4://${header._uri}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false" />
+  	        <convertBodyTo type="java.lang.String" />
+ 	        <unmarshal ref="jackson" />
+        
+        <removeHeaders pattern="_host" />
+    </route>
+    
+    <route>
+    	<from uri="mqtt://vps-monitor?host=tcp://test.mosquitto.org:1883&amp;reconnectDelay=1000&amp;clientId=proxy-iota-italia&amp;subscribeTopicName=RAW(vps-monitor/+/load/avg1)" />
+		<setHeader headerName="_id">
+			<javaScript>
+				var topic = request.getHeader("CamelMQTTSubscribeTopic");
+				new RegExp("vps-monitor\/(.*)\/load\/avg1").exec(topic)[1];				
+			</javaScript>
+		</setHeader>
+        <convertBodyTo type="java.lang.String" />
+		<to uri="bean:IOTALoadBalancer?method=addNode" />
+    </route>
+    
+  </camelContext>
+</beans>
