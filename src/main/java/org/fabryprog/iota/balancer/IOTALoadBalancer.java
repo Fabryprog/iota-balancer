@@ -35,6 +35,7 @@ public class IOTALoadBalancer implements Serializable {
 	public void init() {
 		//available node
 		availableNodes.put("fabryprog-iota", "fabryprog-iota.eye.rs");
+		availableNodes.put("iota1-thingslab", "iota1.thingslab.network");
 	}
 	
 	public void addNode(@Header("_id") String id, @Body String load) {
