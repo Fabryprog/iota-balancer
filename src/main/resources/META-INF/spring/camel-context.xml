@@ -36,7 +36,7 @@
         
         <marshal ref="jackson" />
 	        <convertBodyTo type="java.lang.String" />
-        <toD uri="https4://${header._uri}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false" />
+        <toD uri="https4://${header._uri}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false&amp;httpClient.socketTimeout=120000" />
   	        <convertBodyTo type="java.lang.String" />
  	        <unmarshal ref="jackson" />
         
