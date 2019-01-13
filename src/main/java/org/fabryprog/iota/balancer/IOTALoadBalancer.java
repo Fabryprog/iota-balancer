@@ -62,6 +62,20 @@ public class IOTALoadBalancer implements Serializable {
 		}
 	}
 
+	public void removeNode(@Header("_id") String id) {
+		if(availableNodes.containsKey(id)) {
+			for (NodeDTO n : nodes) {
+				if(id.equals(n.getId())) {
+					nodes.remove(n);
+					
+					break;
+				}
+			}
+		}
+	}
+
+	
+
 	public synchronized String route() {
 		NodeDTO node = null;
 		

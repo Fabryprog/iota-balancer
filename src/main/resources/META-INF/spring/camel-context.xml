@@ -87,6 +87,8 @@
 			</when>
 			<otherwise>
 				<log message="Node ${header[_id]} is not sync!" />
+
+				<to uri="bean:IOTALoadBalancer?method=removeNode" />
 			</otherwise>
 		</choice>        
 		<removeHeaders pattern="*" />
