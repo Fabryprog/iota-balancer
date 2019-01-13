@@ -10,6 +10,7 @@ IOTA Node Balancer
 ## Roadmap
 
  - load balancing (done)
+ - embedded mqtt broker (todo)
  - load monitor alerting (todo)
  - front end statistics (todo)
  
