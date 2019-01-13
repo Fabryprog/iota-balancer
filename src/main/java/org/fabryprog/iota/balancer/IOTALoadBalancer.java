@@ -47,7 +47,11 @@ public class IOTALoadBalancer implements Serializable {
 		}
 	}
 	
-	public void addNode(@Header("_id") String id, @Body String load) {
+	public String getUrl(@Header("_id") String id) {
+		return availableNodes.get(id);
+	}
+	
+	public void addNode(@Header("_id") String id, @Header("_value") String load) {
 		LOG.info("ADD Node {} {}", id, load);
 		if(availableNodes.containsKey(id)) {
 			for (NodeDTO n : nodes) {
