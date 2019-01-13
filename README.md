@@ -4,7 +4,7 @@ IOTA Node Balancer
 
 ## Feature
 
-* proxy balancing using node's performance via my [vps-monitor project](https://github.com/Fabryprog/vps-monitor
+* proxy balancing using node's performance via my [vps-monitor project](https://github.com/Fabryprog/vps-monitor)
 
 
 ## Roadmap
