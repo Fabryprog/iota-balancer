@@ -12,6 +12,7 @@
 	</bean>
 
   <bean id="IOTALoadBalancer" class="org.fabryprog.iota.balancer.IOTALoadBalancer" init-method="init"/>
+  <bean id="fakeHttpsConfigurer" class="org.fabryprog.iota.balancer.FakeHttpsConfigurer" /> 
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">
 
@@ -40,7 +41,7 @@
         
         <marshal ref="jackson" />
         <convertBodyTo type="java.lang.String" />
-       	<toD uri="https4://${header._uri}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false&amp;httpClient.socketTimeout=120000" />
+       	<toD uri="https4://${header._uri}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false&amp;httpClient.socketTimeout=120000&amp;httpClientConfigurer=#fakeHttpsConfigurer" />
         <convertBodyTo type="java.lang.String" />
         <unmarshal ref="jackson" />
         
@@ -49,7 +50,6 @@
     
     <route>
     	<from uri="mqtt://vps-monitor?host=tcp://test.mosquitto.org:1883&amp;reconnectDelay=1000&amp;clientId=proxy-iota-italia&amp;subscribeTopicName=RAW(vps-monitor/+/load/avg1)" />
-		<!-- <to uri="log:debug?showAll=true&amp;multiline=true" /> -->
 		
 		<setHeader headerName="_id">
 			<javaScript>
@@ -76,7 +76,7 @@
         <setBody>
         	<constant>{"command": "getNodeInfo"}</constant>
         </setBody>
-       	<toD uri="https4://${header._uri}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false&amp;httpClient.socketTimeout=120000" />
+       	<toD uri="https4://${header._uri}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false&amp;httpClient.socketTimeout=120000&amp;httpClientConfigurer=#fakeHttpsConfigurer" />
         <convertBodyTo type="java.lang.String" />
         <unmarshal ref="jackson" />
 		<choice>
