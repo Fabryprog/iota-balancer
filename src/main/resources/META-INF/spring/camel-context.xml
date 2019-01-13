@@ -62,6 +62,9 @@
         <setHeader headerName="_value">
         	<simple>${body}</simple>
         </setHeader>
+		<setHeader headerName="_uri">
+        	<simple>${bean:IOTALoadBalancer?method=getUrl}</simple>
+        </setHeader>
         
         <setHeader headerName="Content-Type">
         	<constant>application/json</constant>
@@ -69,12 +72,13 @@
         <setHeader headerName="X-IOTA-API-Version">
         	<constant>1</constant>
         </setHeader>
-
+        
         <setBody>
         	<constant>{"command": "getNodeInfo"}</constant>
         </setBody>
        	<toD uri="https4://${header._uri}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false&amp;httpClient.socketTimeout=120000" />
         <convertBodyTo type="java.lang.String" />
+        <unmarshal ref="jackson" />
 		<choice>
 			<when>
 				<simple>${body[latestMilestoneIndex]} == ${body[latestSolidSubtangleMilestoneIndex]}</simple>
