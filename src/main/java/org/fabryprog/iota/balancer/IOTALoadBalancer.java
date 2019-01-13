@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.camel.Body;
 import org.apache.camel.Header;
 import org.apache.camel.PropertyInject;
 import org.slf4j.Logger;
@@ -30,17 +29,15 @@ public class IOTALoadBalancer implements Serializable {
 	
 	private static final Long MAX_TS = 60000L; // 1 minuto
 	
-	@PropertyInject("nodes.italia")
-	private String nodesItalia;
+	@PropertyInject("trust.nodes")
+	private String trustNodes;
 	
 	final List<NodeDTO> nodes = new LinkedList<NodeDTO>();
 	final Map<String, String> availableNodes = new HashMap<String, String>();
-
-	
 	
 	public void init() {
 		//available node
-		for(String n: nodesItalia.split(",")) {
+		for(String n: trustNodes.split(",")) {
 			String[] pair = n.split(":");
 			
 			availableNodes.put(pair[0], pair[1]);
