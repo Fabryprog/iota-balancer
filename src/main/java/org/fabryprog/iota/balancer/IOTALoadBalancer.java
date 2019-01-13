@@ -15,6 +15,7 @@ import java.util.Random;
 
 import org.apache.camel.Body;
 import org.apache.camel.Header;
+import org.apache.camel.PropertyInject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,19 +24,27 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class IOTALoadBalancer implements Serializable {
-	private static final Logger LOG = LoggerFactory.getLogger(IOTALoadBalancer.class);
-	
 	private static final long serialVersionUID = -741884543226247187L;
 
+	private static final Logger LOG = LoggerFactory.getLogger(IOTALoadBalancer.class);
+	
 	private static final Long MAX_TS = 60000L; // 1 minuto
-
+	
+	@PropertyInject("nodes.italia")
+	private String nodesItalia;
+	
 	final List<NodeDTO> nodes = new LinkedList<NodeDTO>();
 	final Map<String, String> availableNodes = new HashMap<String, String>();
 
+	
+	
 	public void init() {
 		//available node
-		availableNodes.put("fabryprog-iota", "fabryprog-iota.eye.rs");
-		availableNodes.put("iota1-thingslab", "iota1.thingslab.network");
+		for(String n: nodesItalia.split(",")) {
+			String[] pair = n.split(":");
+			
+			availableNodes.put(pair[0], pair[1]);
+		}
 	}
 	
 	public void addNode(@Header("_id") String id, @Body String load) {

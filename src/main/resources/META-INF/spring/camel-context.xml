@@ -7,13 +7,17 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
+	<bean id="properties" class="org.apache.camel.component.properties.PropertiesComponent">
+	    <property name="location" value="classpath:config.properties"/>
+	</bean>
+
   <bean id="IOTALoadBalancer" class="org.fabryprog.iota.balancer.IOTALoadBalancer" init-method="init"/>
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">
 
 	<dataFormats>
-           <json id="jackson" library="Jackson" />
-       </dataFormats>
+        <json id="jackson" library="Jackson" />
+    </dataFormats>
 
 	<restConfiguration component="jetty" host="0.0.0.0" port="8888" bindingMode="json">
 		  <dataFormatProperty key="json.in.disableFeatures" value="FAIL_ON_UNKNOWN_PROPERTIES,ADJUST_DATES_TO_CONTEXT_TIME_ZONE"/>
