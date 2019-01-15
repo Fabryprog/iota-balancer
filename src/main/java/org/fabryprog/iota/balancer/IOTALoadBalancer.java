@@ -27,10 +27,10 @@ public class IOTALoadBalancer implements Serializable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(IOTALoadBalancer.class);
 	
-	private static final Long MAX_TS = 60000L; // 1 minuto
+	private static final Long MAX_TS = 120000L; // 2 minuti
 	
 	@PropertyInject("trust.nodes")
-	private String trustNodes;
+	protected String trustNodes;
 	
 	final List<NodeDTO> nodes = new LinkedList<NodeDTO>();
 	final Map<String, String> availableNodes = new HashMap<String, String>();
@@ -74,8 +74,6 @@ public class IOTALoadBalancer implements Serializable {
 		}
 	}
 
-	
-
 	public synchronized String route() {
 		NodeDTO node = null;
 		
@@ -117,6 +115,16 @@ public class IOTALoadBalancer implements Serializable {
 		return node != null ? node.getUrl() : null;
 	}
 
+	//used by junit test
+	protected List<NodeDTO> getNodes() {
+		return nodes;
+	}
+
+	//used by junit test
+	protected Map<String, String> getAvailableNodes() {
+		return availableNodes;
+	}
+	
 	class NodeDTO {
 
 		private String id;
